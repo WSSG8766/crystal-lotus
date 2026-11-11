@@ -258,50 +258,160 @@
     .boot{display:none}
   }
 
-  /* ===== 访问密码 ===== */
+  /* ===== 访问密码 · 终端面板 ===== */
   .lock{
     position:fixed;inset:0;z-index:60;
     display:flex;align-items:center;justify-content:center;
     padding:26px;
     background:
-      radial-gradient(120% 85% at 50% 44%, rgba(10,20,32,.70), rgba(3,6,10,.97) 62%),
+      radial-gradient(118% 84% at 50% 42%, rgba(9,18,30,.72), rgba(3,6,10,.975) 64%),
       #04070c;
     transition:opacity .5s ease;
   }
+  .lock::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(143,226,255,.045) 1px, rgba(143,226,255,0) 1px),
+      linear-gradient(90deg, rgba(143,226,255,.045) 1px, rgba(143,226,255,0) 1px);
+    background-size:64px 64px;
+    -webkit-mask-image:radial-gradient(72% 62% at 50% 44%, #000 32%, transparent 78%);
+    mask-image:radial-gradient(72% 62% at 50% 44%, #000 32%, transparent 78%);
+  }
   .lock.is-open{opacity:0;pointer-events:none}
+
   .lock-inner{
     position:relative;z-index:1;
-    width:min(340px,84vw);
-    display:flex;flex-direction:column;gap:14px;
+    width:min(392px,88vw);
+    display:flex;flex-direction:column;gap:11px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
     opacity:0;transform:translateY(8px);
     transition:opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1);
   }
-  .lock-rule{height:1px;background:linear-gradient(90deg,rgba(178,214,238,.36),rgba(178,214,238,0))}
-  .lock-head{
-    font-size:12.5px;letter-spacing:.28em;
-    color:rgba(203,230,248,.54);
+
+  .lock-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:9.5px;letter-spacing:.22em;
+    color:rgba(143,226,255,.48);
   }
-  .lock-field{display:flex;gap:10px;align-items:stretch;margin:2px 0 0}
+  .lock-state{display:inline-flex;align-items:center;gap:8px}
+  .lock-dot{
+    width:5px;height:5px;border-radius:50%;
+    background:#8fe2ff;
+    box-shadow:0 0 9px rgba(143,226,255,.85);
+    animation:lockPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes lockPulse{
+    0%,100%{opacity:.30}
+    50%{opacity:1}
+  }
+
+  .lock-frame{
+    position:relative;
+    padding:22px 20px 15px;
+    border:1px solid rgba(143,226,255,.20);
+    background:linear-gradient(180deg, rgba(12,24,38,.60), rgba(6,12,20,.32));
+    box-shadow:inset 0 1px 0 rgba(143,226,255,.10);
+    overflow:hidden;
+  }
+  .lock-frame::after{
+    content:"";position:absolute;left:0;right:0;top:2%;height:1px;
+    background:linear-gradient(90deg, rgba(143,226,255,0), rgba(143,226,255,.50) 50%, rgba(143,226,255,0));
+    animation:lockScan 4.4s linear infinite;
+    opacity:0;
+  }
+  @keyframes lockScan{
+    0%{top:2%;opacity:0}
+    10%{opacity:.75}
+    86%{opacity:.55}
+    100%{top:97%;opacity:0}
+  }
+  .tick{
+    position:absolute;width:13px;height:13px;
+    border:1px solid rgba(143,226,255,.62);
+    box-shadow:0 0 8px rgba(143,226,255,.16);
+  }
+  .tick.tl{left:0;top:0;border-right:0;border-bottom:0}
+  .tick.tr{right:0;top:0;border-left:0;border-bottom:0}
+  .tick.bl{left:0;bottom:0;border-right:0;border-top:0}
+  .tick.br{right:0;bottom:0;border-left:0;border-top:0}
+
+  .lock-label{
+    margin:0 0 15px;
+    font-size:11px;letter-spacing:.26em;
+    color:rgba(203,230,248,.58);
+  }
+  .lock-label em{
+    display:block;margin-top:7px;
+    font-style:normal;font-size:9px;letter-spacing:.36em;
+    color:rgba(143,226,255,.40);
+  }
+
+  .lock-field{display:flex;gap:9px;align-items:stretch}
+  .lock-input{position:relative;flex:1 1 auto;min-width:0;display:flex;align-items:stretch}
+  .lock-input::before{
+    content:"\203A";
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    font-size:15px;line-height:1;
+    color:rgba(143,226,255,.48);
+    pointer-events:none;
+  }
   .lock-field input{
     flex:1 1 auto;min-width:0;
-    font:inherit;font-size:16px;
-    letter-spacing:.32em;
-    color:var(--ice);
-    background:transparent;
-    border:0;border-bottom:1px solid rgba(178,214,238,.30);
+    font-family:inherit;
+    font-size:17px;
+    letter-spacing:.40em;
+    color:#e4f6ff;
+    background:rgba(143,226,255,.05);
+    border:1px solid rgba(143,226,255,.26);
     border-radius:0;
-    padding:11px 2px;
+    padding:12px 14px 12px 34px;
+    caret-color:#8fe2ff;
     -webkit-appearance:none;appearance:none;
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
   }
-  .lock-field input::placeholder{color:rgba(203,230,248,.30);letter-spacing:.18em}
-  .lock-field input:focus{outline:none;border-bottom-color:rgba(143,226,255,.72)}
-  .lock-field input:focus-visible{outline:2px solid rgba(143,226,255,.55);outline-offset:3px}
-  .lock-field button{flex:0 0 auto}
+  .lock-field input::placeholder{
+    font-size:11px;letter-spacing:.30em;
+    color:rgba(143,226,255,.28);
+  }
+  .lock-field input:focus{
+    outline:none;
+    border-color:rgba(143,226,255,.60);
+    background:rgba(143,226,255,.10);
+    box-shadow:inset 0 0 0 1px rgba(143,226,255,.16), 0 0 20px rgba(90,180,255,.18);
+  }
+  .lock-field button{
+    flex:0 0 auto;
+    min-height:47px;
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:0 15px;
+    font-family:inherit;font-size:13px;letter-spacing:.16em;
+    color:#bfe6ff;
+    background:transparent;
+    border:1px solid rgba(143,226,255,.34);
+    border-radius:0;cursor:pointer;
+    transition:background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .lock-field button em{font-style:normal;font-size:9px;letter-spacing:.22em;opacity:.5}
+  .lock-field button:hover{
+    background:rgba(143,226,255,.12);
+    border-color:rgba(143,226,255,.72);
+    color:#eaf9ff;
+    box-shadow:0 0 18px rgba(90,180,255,.22);
+  }
+  .lock-field button:focus-visible{outline:1px solid rgba(143,226,255,.85);outline-offset:2px}
+
   .lock-tip{
-    min-height:1.2em;margin:0;
-    font-size:13px;line-height:1.5;letter-spacing:.05em;
-    color:rgba(255,182,182,.78);
+    min-height:1.1em;margin:13px 0 0;
+    font-size:10.5px;letter-spacing:.16em;line-height:1.6;
+    color:rgba(255,178,120,.86);
   }
+
+  .lock-meta{
+    display:flex;justify-content:space-between;
+    font-size:9px;letter-spacing:.20em;
+    color:rgba(143,226,255,.30);
+  }
+
   @keyframes lockShake{
     0%,100%{transform:translateX(0)}
     20%{transform:translateX(-5px)}
@@ -318,8 +428,13 @@
     .bar{flex-direction:column;align-items:stretch;gap:14px}
     .bar .note{max-width:100%;font-size:12.5px}
     .acts{justify-content:flex-start}
-    .lock-field{flex-direction:column;gap:12px}
+    .lock-inner{width:min(392px,90vw)}
+    .lock-frame{padding:18px 14px 13px}
+    .lock-label{letter-spacing:.20em}
+    .lock-field{flex-direction:column;gap:10px}
+    .lock-input{min-height:47px}
     .lock-field button{width:100%}
+    .lock-field input{letter-spacing:.32em}
     .boot-title{letter-spacing:.20em;text-indent:.20em}
     .boot-sub{letter-spacing:.30em;text-indent:.30em}
     .boot-foot{grid-template-columns:1fr;justify-items:center;gap:7px;font-size:9.5px;letter-spacing:.10em}
@@ -381,13 +496,31 @@
   <!-- ===== 访问密码 ===== -->
   <div class="lock" id="lock">
     <div class="lock-inner" id="lockInner">
-      <div class="lock-rule"></div>
-      <div class="lock-head">请输入访问密码</div>
-      <form class="lock-field" id="pwForm" autocomplete="off">
-        <input id="pw" type="password" name="pw" inputmode="numeric" autocomplete="off" aria-label="访问密码" placeholder="密码">
-        <button type="submit" id="pwGo">进入</button>
-      </form>
-      <p class="lock-tip" id="pwTip" role="status" aria-live="polite"></p>
+      <div class="lock-bar">
+        <span class="lock-state"><i class="lock-dot"></i>SECURE CHANNEL</span>
+        <span>02 / 02</span>
+      </div>
+
+      <div class="lock-frame">
+        <span class="tick tl"></span><span class="tick tr"></span>
+        <span class="tick bl"></span><span class="tick br"></span>
+
+        <p class="lock-label">输入访问密码<em>ACCESS CODE REQUIRED</em></p>
+
+        <form class="lock-field" id="pwForm" autocomplete="off">
+          <span class="lock-input">
+            <input id="pw" type="password" name="pw" inputmode="numeric" autocomplete="off" aria-label="访问密码" placeholder="ACCESS CODE">
+          </span>
+          <button type="submit" id="pwGo"><span>进入</span><em>ENTER</em></button>
+        </form>
+
+        <p class="lock-tip" id="pwTip" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="lock-meta">
+        <span>ID 0x1F4A</span>
+        <span>AUTH · LOCKED</span>
+      </div>
     </div>
   </div>
 
@@ -741,7 +874,7 @@
   function unlock() {
     if (unlocked) return;
     if (pwInput.value !== PASS) {
-      pwTip.textContent = '密码不正确，请重试';
+      pwTip.textContent = 'ACCESS DENIED · 密码不正确，请重试';
       pwInput.value = '';
       pwInput.focus();
       lock.classList.remove('shake');
